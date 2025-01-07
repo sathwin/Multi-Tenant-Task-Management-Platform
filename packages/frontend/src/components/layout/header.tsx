@@ -141,7 +141,7 @@ export function Header({ className }: HeaderProps) {
                   onBlur={() => setShowWorkspaceMenu(false)}
                 >
                   <div className="space-y-1">
-                    {workspaces.map((workspace) => (
+                    {workspaces.map((workspace: any) => (
                       <Link
                         key={workspace.id}
                         to={`/w/${workspace.slug}`}
