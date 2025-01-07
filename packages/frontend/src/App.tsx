@@ -1,247 +1,114 @@
-import { useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { useAuthStore } from './store/auth';
-import { useRealtimeStore } from './store/realtime';
-import { useWorkspaceStore } from './store/workspace';
+import { Sidebar } from './components/layout/sidebar';
+import { Header } from './components/layout/header';
+import { Dashboard } from './pages/dashboard';
 
-// Layouts
-import AuthLayout from './layouts/auth-layout';
-import DashboardLayout from './layouts/dashboard-layout';
-import PublicLayout from './layouts/public-layout';
-
-// Pages
-import LandingPage from './pages/landing';
-import LoginPage from './pages/auth/login';
-import RegisterPage from './pages/auth/register';
-import DashboardPage from './pages/dashboard';
-import ProjectsPage from './pages/projects';
-import ProjectDetailPage from './pages/projects/[id]';
-import TasksPage from './pages/tasks';
-import TeamPage from './pages/team';
-import SettingsPage from './pages/settings';
-import AnalyticsPage from './pages/analytics';
-import NotFoundPage from './pages/404';
-
-// Components
-import ProtectedRoute from './components/protected-route';
-import WorkspaceRedirect from './components/workspace-redirect';
-import LoadingScreen from './components/loading-screen';
-
-// Page transition variants
-const pageVariants = {
-  initial: {
-    opacity: 0,
-    y: 20,
-  },
-  in: {
-    opacity: 1,
-    y: 0,
-  },
-  out: {
-    opacity: 0,
-    y: -20,
-  },
+// Temporary mock data for testing
+const mockUser = {
+  id: '1',
+  name: 'John Doe',
+  email: 'john@example.com',
+  avatar: null,
+  createdAt: new Date().toISOString(),
 };
 
-const pageTransition = {
-  type: 'tween',
-  ease: 'anticipate',
-  duration: 0.3,
+const mockWorkspace = {
+  id: '1',
+  name: 'My Workspace',
+  slug: 'my-workspace',
+  plan: 'FREE' as const,
+  role: 'OWNER' as const,
+  permissions: ['read', 'write', 'admin'],
+  isActive: true,
+  settings: {},
+  ownerId: '1',
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
 };
 
-function App() {
-  const { user, isLoading, checkAuth, logout } = useAuthStore();
-  const { connect, disconnect } = useRealtimeStore();
-  const { selectedWorkspace } = useWorkspaceStore();
-
-  // Check authentication on app start
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-
-  // Handle realtime connection
-  useEffect(() => {
-    if (user) {
-      connect();
-      return () => disconnect();
-    }
-  }, [user, connect, disconnect]);
-
-  // Show loading screen while checking authentication
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
-
+// Layout component for workspace pages
+function WorkspaceLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background">
-      <AnimatePresence mode="wait">
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={
-            <PublicLayout>
-              <motion.div
-                key="landing"
-                initial="initial"
-                animate="in"
-                exit="out"
-                variants={pageVariants}
-                transition={pageTransition}
-              >
-                {user ? <Navigate to="/dashboard" replace /> : <LandingPage />}
-              </motion.div>
-            </PublicLayout>
-          } />
-
-          {/* Authentication routes */}
-          <Route path="/auth/*" element={
-            <AuthLayout>
-              <Routes>
-                <Route path="login" element={
-                  <motion.div
-                    key="login"
-                    initial="initial"
-                    animate="in"
-                    exit="out"
-                    variants={pageVariants}
-                    transition={pageTransition}
-                  >
-                    {user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
-                  </motion.div>
-                } />
-                <Route path="register" element={
-                  <motion.div
-                    key="register"
-                    initial="initial"
-                    animate="in"
-                    exit="out"
-                    variants={pageVariants}
-                    transition={pageTransition}
-                  >
-                    {user ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
-                  </motion.div>
-                } />
-                <Route path="*" element={<Navigate to="/auth/login" replace />} />
-              </Routes>
-            </AuthLayout>
-          } />
-
-          {/* Dashboard redirect */}
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <WorkspaceRedirect />
-            </ProtectedRoute>
-          } />
-
-          {/* Workspace routes */}
-          <Route path="/w/:workspaceSlug/*" element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <Routes>
-                  <Route index element={
-                    <motion.div
-                      key="dashboard"
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}
-                    >
-                      <DashboardPage />
-                    </motion.div>
-                  } />
-                  
-                  <Route path="projects" element={
-                    <motion.div
-                      key="projects"
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}
-                    >
-                      <ProjectsPage />
-                    </motion.div>
-                  } />
-                  
-                  <Route path="projects/:projectId" element={
-                    <motion.div
-                      key="project-detail"
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}
-                    >
-                      <ProjectDetailPage />
-                    </motion.div>
-                  } />
-                  
-                  <Route path="tasks" element={
-                    <motion.div
-                      key="tasks"
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}
-                    >
-                      <TasksPage />
-                    </motion.div>
-                  } />
-                  
-                  <Route path="team" element={
-                    <motion.div
-                      key="team"
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}
-                    >
-                      <TeamPage />
-                    </motion.div>
-                  } />
-                  
-                  <Route path="analytics" element={
-                    <motion.div
-                      key="analytics"
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}
-                    >
-                      <AnalyticsPage />
-                    </motion.div>
-                  } />
-                  
-                  <Route path="settings" element={
-                    <motion.div
-                      key="settings"
-                      initial="initial"
-                      animate="in"
-                      exit="out"
-                      variants={pageVariants}
-                      transition={pageTransition}
-                    >
-                      <SettingsPage />
-                    </motion.div>
-                  } />
-                  
-                  <Route path="*" element={<NotFoundPage />} />
-                </Routes>
-              </DashboardLayout>
-            </ProtectedRoute>
-          } />
-
-          {/* Catch-all route */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </AnimatePresence>
+    <div className="flex h-screen overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
+      <Sidebar />
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-y-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="h-full"
+          >
+            {children}
+          </motion.div>
+        </main>
+      </div>
     </div>
   );
 }
 
-export default App; 
+// Simple auth store mock
+const useAuthStore = () => ({
+  user: mockUser,
+  isAuthenticated: true,
+  logout: () => console.log('Logout clicked'),
+});
+
+const useWorkspaceStore = () => ({
+  selectedWorkspace: mockWorkspace,
+  workspaces: [mockWorkspace],
+});
+
+// Export the mock stores for other components to use
+(window as any).__mockStores = {
+  useAuthStore,
+  useWorkspaceStore,
+};
+
+// Main App component
+export default function App() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <AnimatePresence mode="wait">
+          <Routes>
+            {/* Direct route to dashboard for testing */}
+            <Route
+              path="/"
+              element={
+                <WorkspaceLayout>
+                  <Dashboard />
+                </WorkspaceLayout>
+              }
+            />
+            
+            {/* Workspace routes */}
+            <Route
+              path="/w/:workspaceSlug/*"
+              element={
+                <WorkspaceLayout>
+                  <Routes>
+                    <Route index element={<Dashboard />} />
+                    <Route path="projects" element={<div className="p-6"><h1 className="text-2xl">Projects Page</h1></div>} />
+                    <Route path="tasks" element={<div className="p-6"><h1 className="text-2xl">Tasks Page</h1></div>} />
+                    <Route path="team" element={<div className="p-6"><h1 className="text-2xl">Team Page</h1></div>} />
+                    <Route path="analytics" element={<div className="p-6"><h1 className="text-2xl">Analytics Page</h1></div>} />
+                    <Route path="settings" element={<div className="p-6"><h1 className="text-2xl">Settings Page</h1></div>} />
+                  </Routes>
+                </WorkspaceLayout>
+              }
+            />
+            
+            {/* Catch all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>
+      </div>
+    </Router>
+  );
+} 
