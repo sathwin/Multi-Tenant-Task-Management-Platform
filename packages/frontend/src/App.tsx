@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from './components/layout/sidebar';
 import { Header } from './components/layout/header';
 import { Dashboard } from './pages/dashboard';
+import { ProjectsPage } from './pages/projects';
+import { TasksPage } from './pages/tasks';
 
 // Temporary mock data for testing
 const mockUser = {
@@ -70,6 +72,20 @@ const useWorkspaceStore = () => ({
   useWorkspaceStore,
 };
 
+// Simple placeholder component
+const PlaceholderPage = ({ title }: { title: string }) => (
+  <div className="flex min-h-[400px] items-center justify-center p-6">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="text-center"
+    >
+      <h1 className="text-2xl font-bold text-foreground mb-2">{title}</h1>
+      <p className="text-muted-foreground">This page is coming soon</p>
+    </motion.div>
+  </div>
+);
+
 // Main App component
 export default function App() {
   return (
@@ -94,11 +110,11 @@ export default function App() {
                 <WorkspaceLayout>
                   <Routes>
                     <Route index element={<Dashboard />} />
-                    <Route path="projects" element={<div className="p-6"><h1 className="text-2xl">Projects Page</h1></div>} />
-                    <Route path="tasks" element={<div className="p-6"><h1 className="text-2xl">Tasks Page</h1></div>} />
-                    <Route path="team" element={<div className="p-6"><h1 className="text-2xl">Team Page</h1></div>} />
-                    <Route path="analytics" element={<div className="p-6"><h1 className="text-2xl">Analytics Page</h1></div>} />
-                    <Route path="settings" element={<div className="p-6"><h1 className="text-2xl">Settings Page</h1></div>} />
+                    <Route path="projects" element={<ProjectsPage />} />
+                    <Route path="tasks" element={<TasksPage />} />
+                    <Route path="team" element={<PlaceholderPage title="Team" />} />
+                    <Route path="analytics" element={<PlaceholderPage title="Analytics" />} />
+                    <Route path="settings" element={<PlaceholderPage title="Settings" />} />
                   </Routes>
                 </WorkspaceLayout>
               }
