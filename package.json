@@ -1,0 +1,26 @@
+{
+  "name": "multi-tenant-task-platform",
+  "version": "1.0.0",
+  "description": "Modern SaaS task management platform with multi-tenancy and real-time collaboration",
+  "private": true,
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=packages/backend",
+    "dev:frontend": "npm run dev --workspace=packages/frontend",
+    "build": "npm run build --workspace=packages/backend && npm run build --workspace=packages/frontend",
+    "db:migrate": "npm run db:migrate --workspace=packages/backend",
+    "db:studio": "npm run db:studio --workspace=packages/backend",
+    "clean": "npm run clean --workspace=packages/backend && npm run clean --workspace=packages/frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+} 
