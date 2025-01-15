@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { CheckSquare, Plus, Filter, SortAsc, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import {
   LineChart,
@@ -15,7 +14,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from 'recharts';
 import { cn } from '@/utils/cn';
 import { ChartData, TimeSeriesData } from '@/types';
@@ -211,7 +209,7 @@ export function AnalyticsChart({
               dataKey={yAxisKey}
               label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             >
-              {data.map((entry, index) => (
+              {data.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
               ))}
             </Pie>

@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  CheckSquare,
-  Clock,
-  Users,
-  TrendingUp,
-  AlertTriangle,
-  Activity,
+  BarChart3,
   Calendar,
+  CheckCircle2,
+  Clock,
+  Filter,
+  Plus,
+  Search,
+  CheckSquare,
   Target,
+  AlertTriangle,
+  Sparkles,
+  TrendingUp,
+  Users,
+  Zap,
+  Activity,
 } from 'lucide-react';
 import { MetricsCard } from '@/components/dashboard/metrics-card';
 import { AnalyticsChart } from '@/components/dashboard/analytics-chart';
@@ -76,12 +83,12 @@ const itemVariants = {
 };
 
 export function Dashboard() {
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [dateRange, setDateRange] = useState('7d');
 
   useEffect(() => {
     // Simulate loading
-    const timer = setTimeout(() => setLoading(false), 1000);
+    const timer = setTimeout(() => setIsLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -128,7 +135,7 @@ export function Dashboard() {
             }}
             icon={CheckSquare}
             color="blue"
-            loading={loading}
+            loading={isLoading}
           />
         </motion.div>
 
@@ -143,7 +150,7 @@ export function Dashboard() {
             }}
             icon={Target}
             color="green"
-            loading={loading}
+            loading={isLoading}
           />
         </motion.div>
 
@@ -158,7 +165,7 @@ export function Dashboard() {
             }}
             icon={AlertTriangle}
             color="red"
-            loading={loading}
+            loading={isLoading}
           />
         </motion.div>
 
@@ -173,7 +180,7 @@ export function Dashboard() {
             }}
             icon={Clock}
             color="purple"
-            loading={loading}
+            loading={isLoading}
           />
         </motion.div>
       </motion.div>
@@ -194,7 +201,7 @@ export function Dashboard() {
             height={350}
             dataKeys={['completed', 'created']}
             xAxisKey="date"
-            loading={loading}
+            loading={isLoading}
           />
         </motion.div>
 
@@ -205,7 +212,7 @@ export function Dashboard() {
             type="pie"
             data={mockProjectData}
             height={350}
-            loading={loading}
+            loading={isLoading}
           />
         </motion.div>
       </motion.div>
@@ -224,7 +231,7 @@ export function Dashboard() {
             type="bar"
             data={mockTeamProductivity}
             height={300}
-            loading={loading}
+            loading={isLoading}
           />
         </motion.div>
 

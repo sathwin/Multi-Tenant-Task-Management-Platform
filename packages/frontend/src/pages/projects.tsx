@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { FolderOpen, Plus, Filter, Grid3X3, List } from 'lucide-react';
+import { FolderOpen, Plus, Filter, Grid3X3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function ProjectsPage() {

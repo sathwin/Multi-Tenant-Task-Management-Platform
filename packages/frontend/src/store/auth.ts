@@ -48,6 +48,7 @@ interface AuthActions {
 
 type AuthStore = AuthState & AuthActions;
 
+// Environment variables
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 // API helpers
@@ -315,15 +316,15 @@ export const apiCallWithAuth = async (endpoint: string, options: RequestInit = {
   } catch (error: any) {
     const originalRequest = { endpoint, options };
     
-    if (error?.response?.status === 401 && !originalRequest.options.retry) {
+    if (error?.response?.status === 401 && !(originalRequest as any).retry) {
+      // Mark request as retried to prevent infinite loops
+      (originalRequest as any).retry = true;
+      
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then(() => {
-          return authenticatedApiCall(endpoint, useAuthStore.getState().tokens, {
-            ...options,
-            retry: true,
-          });
+          return authenticatedApiCall(endpoint, useAuthStore.getState().tokens, options);
         });
       }
 
@@ -334,10 +335,7 @@ export const apiCallWithAuth = async (endpoint: string, options: RequestInit = {
         
         if (refreshed) {
           processQueue(null);
-          return authenticatedApiCall(endpoint, useAuthStore.getState().tokens, {
-            ...options,
-            retry: true,
-          });
+          return authenticatedApiCall(endpoint, useAuthStore.getState().tokens, options);
         } else {
           processQueue(error, null);
           clearAuth();

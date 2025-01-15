@@ -144,7 +144,7 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
           state.isLoading = false;
           
           // Add to workspaces list if not already there
-          const existingIndex = state.workspaces.findIndex(w => w.id === response.data.id);
+          const existingIndex = state.workspaces.findIndex((w: any) => w.id === response.data.id);
           if (existingIndex === -1) {
             state.workspaces.push(response.data);
           }
@@ -198,7 +198,7 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
         const updatedWorkspace = response.data;
 
         set((state) => {
-          const index = state.workspaces.findIndex(w => w.id === id);
+          const index = state.workspaces.findIndex((w: any) => w.id === id);
           if (index !== -1) {
             state.workspaces[index] = updatedWorkspace;
           }
@@ -222,7 +222,7 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
         });
 
         set((state) => {
-          state.workspaces = state.workspaces.filter(w => w.id !== id);
+          state.workspaces = state.workspaces.filter((w: any) => w.id !== id);
           
           if (state.selectedWorkspace?.id === id) {
             state.selectedWorkspace = null;
@@ -287,7 +287,7 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
         const updatedMember = response.data;
 
         set((state) => {
-          const index = state.members.findIndex(m => m.id === memberId);
+          const index = state.members.findIndex((m: any) => m.id === memberId);
           if (index !== -1) {
             state.members[index] = updatedMember;
           }
@@ -307,7 +307,7 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
         });
 
         set((state) => {
-          state.members = state.members.filter(m => m.id !== memberId);
+          state.members = state.members.filter((m: any) => m.id !== memberId);
         });
       } catch (error: any) {
         set((state) => {
@@ -353,7 +353,7 @@ export const useWorkspaceStore = create<WorkspaceStore>()(
         });
 
         set((state) => {
-          state.invites = state.invites.filter(i => i.id !== inviteId);
+          state.invites = state.invites.filter((i: any) => i.id !== inviteId);
         });
       } catch (error: any) {
         set((state) => {
